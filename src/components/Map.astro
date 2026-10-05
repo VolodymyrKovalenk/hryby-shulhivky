@@ -1,0 +1,20 @@
+---
+const { points = [] } = Astro.props; // [{lat, lng, label?, href?}]
+const osm = (p: any) => `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lng}#map=17/${p.lat}/${p.lng}`;
+---
+{points.length > 0 && <>
+  <div class="map" data-points={JSON.stringify(points)}></div>
+  <ul class="pts">{points.map((p: any) => <li>{p.label ? p.label + ': ' : 'Знайдено: '}<a href={osm(p)}>{p.lat}, {p.lng}</a>{p.date ? ` (${p.date})` : ''}</li>)}</ul>
+</>}
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  document.querySelectorAll<HTMLElement>('.map').forEach(el => {
+    if (!navigator.onLine) { el.hidden = true; return; } // offline: the coordinate list below remains
+    const pts = JSON.parse(el.dataset.points!); const map = L.map(el);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+    const g = pts.map((p: any) => L.circleMarker([p.lat, p.lng], { radius: 8, color: '#b3261e' }).addTo(map)
+      .bindPopup(p.href ? `<a href="${p.href}">${p.label}</a>` : (p.label ?? '')));
+    map.fitBounds(L.featureGroup(g).getBounds().pad(0.3), { maxZoom: 16 });
+  });
+</script>

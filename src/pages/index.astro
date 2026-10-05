@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { EDIBILITY, photos, base } from '../lib';
+const items = (await getCollection('mushrooms')).sort((a, b) => a.data.name.localeCompare(b.data.name, 'uk'));
+---
+<Base>
+  <div class="tools"><input id="q" type="search" placeholder="Пошук гриба…">
+    <select id="f"><option value="">Усі</option>{Object.entries(EDIBILITY).map(([k, v]) => <option value={k}>{v.icon} {v.label}</option>)}</select></div>
+  <div class="grid">{items.map(m => { const e = EDIBILITY[m.data.edibility]; const p = photos(m.id)[0]; return (
+    <a class="card" href={`${base}/mushrooms/${m.id}/`} data-t={`${m.data.name} ${m.data.latin}`.toLowerCase()} data-e={m.data.edibility}>
+      {p ? <img src={p} alt={m.data.name} loading="lazy" /> : <div class="ph">🍄</div>}
+      <div class="meta"><b>{m.data.name}</b><i>{m.data.latin}</i><span class="tag" style={`background:${e.color}`}>{e.icon} {e.label}</span></div>
+    </a>); })}</div>
+</Base>
+<script>
+  const q = document.getElementById('q') as HTMLInputElement, f = document.getElementById('f') as HTMLSelectElement;
+  const run = () => document.querySelectorAll<HTMLElement>('.card').forEach(c => {
+    c.style.display = (c.dataset.t!.includes(q.value.trim().toLowerCase()) && (!f.value || c.dataset.e === f.value)) ? '' : 'none'; });
+  q.addEventListener('input', run); f.addEventListener('change', run);
+</script>

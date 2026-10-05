@@ -1,0 +1,17 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Map from '../../components/Map.astro';
+import { EDIBILITY, photos, locations } from '../../lib';
+export async function getStaticPaths() { return (await getCollection('mushrooms')).map(m => ({ params: { slug: m.id }, props: { m } })); }
+const { m } = Astro.props; const d = m.data; const e = EDIBILITY[d.edibility]; const { Content } = await render(m);
+---
+<Base title={`${d.name} — Гриби Шульгівки`}>
+  <h1>{d.name} <small><i>{d.latin}</i></small></h1>
+  <span class="tag" style={`background:${e.color}`}>{e.icon} {e.label}</span>
+  {d.edibility === 'edible' && <p><b>⚠ Має отруйних двійників:</b> {d.lookalikes}</p>}
+  <div class="gallery">{photos(m.id).map(p => <img src={p} alt={d.name} />)}</div>
+  <h2>Як розпізнати</h2><Content />
+  <dl><dt>Сезон</dt><dd>{d.season}</dd><dt>Місце</dt><dd>{d.habitat}</dd><dt>Схожі гриби</dt><dd>{d.lookalikes}</dd><dt>Джерело</dt><dd>{d.source}</dd></dl>
+  <Map points={locations(m.id)} />
+</Base>

@@ -1,0 +1,9 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Map from '../components/Map.astro';
+import { locations, base } from '../lib';
+const points = (await getCollection('mushrooms')).flatMap(m => locations(m.id).map(l => ({ ...l, label: m.data.name, href: `${base}/mushrooms/${m.id}/` })));
+---
+<Base title="Мапа — Гриби Шульгівки"><h1>Де знайдено</h1>
+  {points.length ? <Map points={points} /> : <p>Координат ще немає. Вони з'являються, коли фото мають геодані.</p>}</Base>
