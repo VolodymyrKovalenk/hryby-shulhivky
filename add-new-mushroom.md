@@ -35,14 +35,7 @@ STEP 5 - Report, briefly
 - Any edibility change, any source line you kept, any warnings from the build.
 - If coordinates went to the public file, remind me that they will stay in git history once committed.
 
-PHOTOS_FOLDER: /Users/vovakovalenko/repo/hryby-shulhivky/photo-src/Photos-1-001 (1)
-PRIVATE_LOCATIONS: no
+PHOTOS_FOLDER: <path>
+PRIVATE_LOCATIONS: <yes/no>
 DESCRIPTION:
-name: "Білий гриб"
-latin: "Boletus edulis"
-edibility: edible
-season: "Червень — листопад"
-habitat: "Листяні, хвойні та мішані ліси, у симбіозі з ялиною, сосною, дубом та буком"
-lookalikes: "Жовчний гриб (Tylopilus felleus) — гіркий м'якуш, неїстівний, пори з віком рожевіють; сатанинський гриб (Rubroboletus satanas) — отруйний, пори червоні, м'якуш синіє на зрізі"
-source: "ПЕРЕВІРИТИ ВРУЧНУ — вкажіть польовий визначник"
-Капелюшок опуклий, згодом подушкоподібний, від світло-коричневого до темно-каштанового кольору, з гладенькою або трохи зморшкуватою сухою поверхнею, яка під час дощу стає клейкою. Гіменофор трубчастий, спочатку білий, пізніше жовтувато-зелений, легко відокремлюється від м'якуша. Ніжка масивна, бочкоподібна або клубнеподібна, світло-бежева, у верхній частині вкрита тонкою білою сіточкою. М'якуш щільний, м'ясистий, білий, не змінює кольору на зрізі, має приємний грибний запах та горіховий смак. Споровий порошок брудно-оливковий.
+<paste the Markdown from the other AI here>

@@ -5,17 +5,22 @@ import { EDIBILITY, photos, base } from '../lib';
 const items = (await getCollection('mushrooms')).sort((a, b) => a.data.name.localeCompare(b.data.name, 'uk'));
 ---
 <Base>
-  <div class="tools"><input id="q" type="search" placeholder="Пошук гриба…">
-    <select id="f"><option value="">Усі</option>{Object.entries(EDIBILITY).map(([k, v]) => <option value={k}>{v.icon} {v.label}</option>)}</select></div>
+  <section class="hero"><h1>Гриби Шульгівки</h1><p>Фотопутівник грибами нашого лісу · {items.length} видів</p></section>
+  <div class="tools"><input id="q" type="search" placeholder="Пошук гриба…" aria-label="Пошук гриба">
+    <div class="chips"><button class="chip" data-f="" aria-pressed="true">Усі</button>
+      {Object.entries(EDIBILITY).map(([k, v]) => <button class="chip" data-f={k} aria-pressed="false">{v.icon} {v.label.split(' / ')[0]}</button>)}</div></div>
   <div class="grid">{items.map(m => { const e = EDIBILITY[m.data.edibility]; const p = photos(m.id)[0]; return (
     <a class="card" href={`${base}/mushrooms/${m.id}/`} data-t={`${m.data.name} ${m.data.latin}`.toLowerCase()} data-e={m.data.edibility}>
       {p ? <img src={p} alt={m.data.name} loading="lazy" /> : <div class="ph">🍄</div>}
-      <div class="meta"><b>{m.data.name}</b><i>{m.data.latin}</i><span class="tag" style={`background:${e.color}`}>{e.icon} {e.label}</span></div>
+      <span class="tag" style={`background:${e.color}`}>{e.icon} {e.label.split(' / ')[0]}</span>
+      <div class="meta"><b>{m.data.name}</b><i>{m.data.latin}</i></div>
     </a>); })}</div>
 </Base>
 <script>
-  const q = document.getElementById('q') as HTMLInputElement, f = document.getElementById('f') as HTMLSelectElement;
+  const q = document.getElementById('q') as HTMLInputElement; let f = '';
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
   const run = () => document.querySelectorAll<HTMLElement>('.card').forEach(c => {
-    c.style.display = (c.dataset.t!.includes(q.value.trim().toLowerCase()) && (!f.value || c.dataset.e === f.value)) ? '' : 'none'; });
-  q.addEventListener('input', run); f.addEventListener('change', run);
+    c.style.display = (c.dataset.t!.includes(q.value.trim().toLowerCase()) && (!f || c.dataset.e === f)) ? '' : 'none'; });
+  chips.forEach(b => b.addEventListener('click', () => { f = b.dataset.f!; chips.forEach(x => x.setAttribute('aria-pressed', String(x === b))); run(); }));
+  q.addEventListener('input', run);
 </script>

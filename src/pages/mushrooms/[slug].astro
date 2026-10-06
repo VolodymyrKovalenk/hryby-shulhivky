@@ -2,16 +2,19 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Map from '../../components/Map.astro';
-import { EDIBILITY, photos, locations } from '../../lib';
+import { EDIBILITY, photos, locations, base } from '../../lib';
 export async function getStaticPaths() { return (await getCollection('mushrooms')).map(m => ({ params: { slug: m.id }, props: { m } })); }
 const { m } = Astro.props; const d = m.data; const e = EDIBILITY[d.edibility]; const { Content } = await render(m);
+const imgs = photos(m.id);
 ---
 <Base title={`${d.name} — Гриби Шульгівки`}>
-  <h1>{d.name} <small><i>{d.latin}</i></small></h1>
+  <a class="back" href={`${base}/`}>← Усі гриби</a>
+  {imgs.length > 0 && <div class="gallery">{imgs.map(p => <img src={p} alt={d.name} />)}</div>}
+  <h1 class="title">{d.name}</h1><p class="latin">{d.latin}</p>
   <span class="tag" style={`background:${e.color}`}>{e.icon} {e.label}</span>
-  {d.edibility === 'edible' && <p><b>⚠ Має отруйних двійників:</b> {d.lookalikes}</p>}
-  <div class="gallery">{photos(m.id).map(p => <img src={p} alt={d.name} />)}</div>
+  {d.edibility === 'edible' && <div class="alert"><b>⚠ Має отруйних двійників:</b> {d.lookalikes}</div>}
   <h2>Як розпізнати</h2><Content />
-  <dl><dt>Сезон</dt><dd>{d.season}</dd><dt>Місце</dt><dd>{d.habitat}</dd><dt>Схожі гриби</dt><dd>{d.lookalikes}</dd><dt>Джерело</dt><dd>{d.source}</dd></dl>
+  <div class="facts"><div class="fact"><small>Сезон</small><p>{d.season}</p></div><div class="fact"><small>Місце</small><p>{d.habitat}</p></div><div class="fact"><small>Схожі гриби</small><p>{d.lookalikes}</p></div></div>
+  <p class="src">Джерело: {d.source}</p>
   <Map points={locations(m.id)} />
 </Base>
