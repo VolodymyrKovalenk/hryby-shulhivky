@@ -15,7 +15,7 @@ const imgs = photos(m.id);
   {d.edibility === 'edible' && <div class="alert"><b>⚠ Має отруйних двійників:</b> {d.lookalikes}</div>}
   <h2>Як розпізнати</h2><Content />
   <div class="facts"><div class="fact"><small>Сезон</small><p>{d.season}</p></div><div class="fact"><small>Місце</small><p>{d.habitat}</p></div><div class="fact"><small>Схожі гриби</small><p>{d.lookalikes}</p></div></div>
-  <p class="src">Джерело: {d.source}</p>
+  {d.source && <p class="src">Джерело: {d.source}</p>}
   <Map points={locations(m.id)} />
   {imgs.length > 0 && <dialog class="lightbox"><button type="button" class="lightbox-close" aria-label="Закрити">×</button><img alt="" /></dialog>}
 </Base>

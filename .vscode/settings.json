@@ -1,0 +1,12 @@
+{
+  "cSpell.language": "en,uk,la",
+  "cSpell.customDictionaries": {
+    "mushroom-latin": {
+      "name": "mushroom-latin",
+      "path": "${workspaceFolder}/.vscode/mushroom-latin-words.txt",
+      "addWords": true,
+      "description": "Latin genus and species epithets used in this project"
+    }
+  },
+  "cSpell.dictionaries": ["mushroom-latin"]
+}

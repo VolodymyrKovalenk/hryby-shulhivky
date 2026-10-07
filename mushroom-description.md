@@ -18,7 +18,6 @@ edibility: <edible | conditional | inedible | poisonous>
 season: "<short>"
 habitat: "<short>"
 lookalikes: "<one line>"
-source: "ПЕРЕВІРИТИ ВРУЧНУ — вкажіть польовий визначник"
 ---
 <body>
 ```
@@ -36,7 +35,7 @@ source: "ПЕРЕВІРИТИ ВРУЧНУ — вкажіть польовий �
 - `season`: months or seasons typical for Ukraine, short (for example `"Червень — жовтень"`).
 - `habitat`: tree partners, forest type and soil, in general terms only. No place names.
 - `lookalikes`: one line, 1-3 species, separated by semicolons. Format each as "Ukrainian name (Latin name) — the key difference, and whether it is edible or dangerous". For an edible species, include EVERY dangerous look-alike you know of. If no famous look-alike exists, name the closest confusable species. Never state that there are no look-alikes.
-- `source`: write exactly the text shown in the structure. You cannot consult books, so never invent a source, author, title or page number. I will fill this in myself.
+- Do **not** include a `source` field. Never invent a source, author, title or page number.
 
 ## Body rules
 
@@ -57,7 +56,6 @@ edibility: edible
 season: "Червень — жовтень"
 habitat: "Листяні та хвойні ліси, під дубом, буком, сосною, ялиною"
 lookalikes: "Жовчний гриб (Tylopilus felleus) — гіркий, неїстівний, трубочки з віком рожевіють; сатанинський гриб (Rubroboletus satanas) — отруйний, червоні пори і ніжка з червоною сіточкою"
-source: "ПЕРЕВІРИТИ ВРУЧНУ — вкажіть польовий визначник"
 ---
 Капелюшок коричневий, гладенький, у вологу погоду трохи слизький. Знизу білі трубочки, що з віком стають жовтуватими. Ніжка товста, бочкоподібна, зі світлою сіточкою у верхній частині. М'якуш білий, на зламі не змінює колір, запах приємний.
 ```

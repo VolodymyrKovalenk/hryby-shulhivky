@@ -9,7 +9,7 @@ This file is both **documentation** (what was decided and why) and a **prompt-re
 ## 1. Summary
 
 | Item | Decision |
-|---|---|
+| --- | --- |
 | Type | Static website (no backend, no database, no login) |
 | Name | «Гриби Шульгівки» (English: "Hryby Shulhivky") |
 | Content language | Ukrainian (UI and content) |
@@ -42,7 +42,7 @@ Decisions were made in a structured interview. Where the owner chose differently
 
 ### Content model (per mushroom)
 
-Common name, Latin name, edibility status, how to recognise it, season, habitat, look-alikes, **source line** (the guide the information was verified against), and 2–5 photos.
+Common name, Latin name, edibility status, how to recognise it, season, habitat, look-alikes, optional **source line** (a real field guide when known — omit placeholders), and 2–5 photos.
 
 ### Safety
 
@@ -53,7 +53,7 @@ Common name, Latin name, edibility status, how to recognise it, season, habitat,
   - `inedible` — Неїстівний — ✖ grey
   - `poisonous` — Отруйний / смертельно небезпечний — ☠ red
 - "Edible" entries also display a note about toxic look-alikes.
-- Every entry carries a "source" line naming the guide used to verify it.
+- Entries may include a "source" line naming the guide used to verify them; if absent, the UI hides that line.
 
 ### Browsing
 
@@ -142,7 +142,7 @@ edibility: edible                      # edible | conditional | inedible | poiso
 season: Літо — осінь
 habitat: Листяні та хвойні ліси ...
 lookalikes: Жовчний гриб (Tylopilus felleus) — гіркий, неїстівний ...
-source: <field guide the entry was verified against>
+source: <optional — real field guide only; omit if unknown>
 ---
 Markdown body = "Як розпізнати" (how to recognise it).
 ```
@@ -161,8 +161,8 @@ Markdown body = "Як розпізнати" (how to recognise it).
 
 ## 8. Workflow for the owner
 
-1. Add `src/content/mushrooms/<latin-name>.md`.
-2. Download originals from Google Photos into a folder, then run `npm run photos -- <latin-name> <folder> [--private]`.
+1. Put originals + a description Markdown under `photo-src/<common-name>/`, then ask the agent to use the **add-mushroom** skill (or add `src/content/mushrooms/<latin-name>.md` by hand).
+2. Or: download originals into a folder and run `npm run photos -- <latin-name> <folder> [--private]`.
 3. Preview with `npm run dev` (URL ends with `/hryby-shulhivky/`).
 4. `git add . && git commit && git push` → GitHub Actions publishes.
 5. To hide/publish coordinates: `npm run loc -- hide <slug>` / `npm run loc -- publish <slug>`.
@@ -177,7 +177,7 @@ Setup once: create a **public** repo `hryby-shulhivky`, set the GitHub username 
 - **GPS accuracy under tree cover can be tens of metres;** pins are approximate.
 - **Messengers (Telegram, WhatsApp, Viber) usually strip GPS;** use Google Photos "download original" or a USB cable. Android camera location tagging must be on.
 - **OpenStreetMap tile policy** prohibits bulk caching/prefetching of tiles; this is why the map is online-only.
-- **Safety/liability:** the site is explicitly not an edibility guide; keep the banner and source lines.
+- **Safety/liability:** the site is explicitly not an edibility guide; keep the banner (and real source lines when present).
 
 ## 10. Status and open items
 
@@ -197,9 +197,9 @@ Setup once: create a **public** repo `hryby-shulhivky`, set the GitHub username 
 
 > Build a static Astro website called «Гриби Шульгівки» (Hryby Shulhivky): a read-only, mobile-first, offline-capable catalogue of mushrooms from my local forest, in Ukrainian. Deploy it on GitHub Pages at base path `/hryby-shulhivky` (public repo `hryby-shulhivky`, GitHub Actions workflow, `trailingSlash: 'always'`).
 >
-> Content: an Astro content collection `mushrooms`, one Markdown file per mushroom named by Latin-name slug, with a validated frontmatter schema: `name`, `latin`, `edibility` (`edible | conditional | inedible | poisonous`), `season`, `habitat`, `lookalikes`, `source`; the Markdown body is "how to recognise it". Photos live in `public/photos/<slug>/NN.webp` and are discovered at build time.
+> Content: an Astro content collection `mushrooms`, one Markdown file per mushroom named by Latin-name slug, with a validated frontmatter schema: `name`, `latin`, `edibility` (`edible | conditional | inedible | poisonous`), `season`, `habitat`, `lookalikes`, optional `source`; the Markdown body is "how to recognise it". Photos live in `public/photos/<slug>/NN.webp` and are discovered at build time.
 >
-> UI: a safety banner on every page ("not an identification guide for eating; never eat a mushroom based on this site alone"); home page = photo grid + search box (name and Latin name) + edibility filter; map page in the menu. Edibility is always colour + icon + text (✔ green edible, ⚠ amber conditionally edible, ✖ grey inedible, ☠ red poisonous/deadly); edible entries show a toxic look-alike warning. Entry pages show gallery, how to recognise, season, habitat, look-alikes, source, and a map only if the entry has at least one coordinate.
+> UI: a safety banner on every page ("not an identification guide for eating; never eat a mushroom based on this site alone"); home page = photo grid + search box (name and Latin name) + edibility filter; map page in the menu. Edibility is always colour + icon + text (✔ green edible, ⚠ amber conditionally edible, ✖ grey inedible, ☠ red poisonous/deadly); edible entries show a toxic look-alike warning. Entry pages show gallery, how to recognise, season, habitat, look-alikes, optional source, and a map only if the entry has at least one coordinate.
 >
 > Offline: service worker (network-first, cache fallback) and a `precache.json` endpoint; cache all pages and photos on first visit and show a "✓ Доступно офлайн" badge. Map uses Leaflet + OpenStreetMap tiles online only; offline, show a text list of coordinates with links to a maps app.
 >
@@ -209,4 +209,4 @@ Setup once: create a **public** repo `hryby-shulhivky`, set the GitHub username 
 
 ---
 
-*Generated from the design interview for the "Mashroom world" project.*
+*Generated from the design interview for the "Mushroom world" project.*
