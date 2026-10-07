@@ -9,7 +9,7 @@ const imgs = photos(m.id);
 ---
 <Base title={`${d.name} — Гриби Шульгівки`}>
   <a class="back" href={`${base}/`}>← Усі гриби</a>
-  {imgs.length > 0 && <div class="gallery">{imgs.map(p => <img src={p} alt={d.name} />)}</div>}
+  {imgs.length > 0 && <div class="gallery">{imgs.map(p => <button type="button" aria-label={`Збільшити фото: ${d.name}`}><img src={p} alt={d.name} /></button>)}</div>}
   <h1 class="title">{d.name}</h1><p class="latin">{d.latin}</p>
   <span class="tag" style={`background:${e.color}`}>{e.icon} {e.label}</span>
   {d.edibility === 'edible' && <div class="alert"><b>⚠ Має отруйних двійників:</b> {d.lookalikes}</div>}
@@ -17,4 +17,19 @@ const imgs = photos(m.id);
   <div class="facts"><div class="fact"><small>Сезон</small><p>{d.season}</p></div><div class="fact"><small>Місце</small><p>{d.habitat}</p></div><div class="fact"><small>Схожі гриби</small><p>{d.lookalikes}</p></div></div>
   <p class="src">Джерело: {d.source}</p>
   <Map points={locations(m.id)} />
+  {imgs.length > 0 && <dialog class="lightbox"><button type="button" class="lightbox-close" aria-label="Закрити">×</button><img alt="" /></dialog>}
 </Base>
+{imgs.length > 0 && <script>
+  const dialog = document.querySelector('.lightbox') as HTMLDialogElement;
+  const full = dialog.querySelector('img')!;
+  document.querySelectorAll<HTMLButtonElement>('.gallery button').forEach(button => {
+    button.addEventListener('click', () => {
+      const thumb = button.querySelector('img')!;
+      full.src = thumb.src;
+      full.alt = thumb.alt;
+      dialog.showModal();
+    });
+  });
+  dialog.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => full.removeAttribute('src'));
+</script>}

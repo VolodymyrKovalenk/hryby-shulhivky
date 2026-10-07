@@ -34,15 +34,18 @@ This file is both **documentation** (what was decided and why) and a **prompt-re
 Decisions were made in a structured interview. Where the owner chose differently from the recommendation, that is noted.
 
 ### Audience, access, scope
+
 - **Public, unadvertised, no login.** Simplest, and fits "visitors cannot change anything".
 - **Works offline** (no mobile signal in the forest is the main real-world use case).
 - **Ukrainian only.** A second language can be added later.
 - **Launch with ~10 mushrooms, grow to ~50.**
 
 ### Content model (per mushroom)
+
 Common name, Latin name, edibility status, how to recognise it, season, habitat, look-alikes, **source line** (the guide the information was verified against), and 2–5 photos.
 
 ### Safety
+
 - A clear banner: the site is **not** an identification guide for eating; never eat a mushroom based on this site alone.
 - Four edibility categories, each shown with **colour + icon + text label** (never colour only):
   - `edible` — Їстівний — ✔ green
@@ -53,15 +56,18 @@ Common name, Latin name, edibility status, how to recognise it, season, habitat,
 - Every entry carries a "source" line naming the guide used to verify it.
 
 ### Browsing
+
 - Photo grid, edibility filter, and a text search box (Ukrainian text).
 - **Excluded:** season filters, look-alike view (revisit when there are 20+ entries).
 - Home page order: safety banner at the very top, then search/filter and the grid; the map is in the menu.
 
 ### Offline
+
 - Cache **everything** (pages + resized photos) on the first visit, and show a small "✓ Доступно офлайн" indicator once caching completes.
-- The map needs the internet (map tiles). Offline, it degrades to a text list: "Found at <lat>, <lng>" with a link to open a maps app.
+- The map needs the internet (map tiles). Offline, it degrades to a text list: "Found at `<lat>`, `<lng>`" with a link to open a maps app.
 
 ### Photos and location
+
 - Photos come from the owner's **Android** phone, are uploaded to **Google Photos**, and are downloaded from there (original quality, which keeps GPS) before being added to the site.
 - A laptop script reads GPS and date from each photo, resizes it (max 1600 px, WebP), **strips all metadata** and writes only the resized copy into the repo.
 - Only latitude, longitude and date are kept in the data files.
@@ -73,18 +79,20 @@ Common name, Latin name, edibility status, how to recognise it, season, habitat,
 - Caveat to remember: coordinates committed once remain in git history even if later moved to the private file.
 
 ### Stack and hosting
+
 - **Astro** with a content collection (one Markdown file per mushroom, validated by a schema).
 - **GitHub Pages**, free address, deployed by GitHub Actions on push to `main`. The repo must be **public** for free GitHub Pages, so everything committed is publicly readable.
 - Own domain: not needed now; can be added later.
 - URL scheme: site root `/hryby-shulhivky/`; each mushroom at `/hryby-shulhivky/mushrooms/<latin-name-slug>/` (e.g. `boletus-edulis`); map at `/hryby-shulhivky/map/`.
 
 ### Changes made while building the starter (relative to the interview)
+
 - Image resizing is done by the **laptop script**, not by Astro's image pipeline (Astro's pipeline drops GPS data and hashes file names, which complicates offline caching). Photos live in `public/photos/<slug>/NN.webp`.
 - The safety banner is shown on **every page**, not only the home page (people can land directly on an entry).
 
 ## 4. Architecture
 
-```
+```text
 Phone (Android) → Google Photos → download originals → laptop
 Laptop: npm run photos  → resized WebP in public/photos/<slug>/
                         → lat/lng/date into locations file (public or private)
@@ -96,7 +104,7 @@ No server, no database, no admin UI. The repository is the "CMS".
 
 ## 5. Project structure
 
-```
+```text
 hryby-shulhivky/
   astro.config.mjs            site: https://<USER>.github.io, base: /hryby-shulhivky, trailingSlash: always
   package.json                deps: astro, leaflet; dev: sharp, exifr, @types/leaflet
@@ -200,4 +208,5 @@ Setup once: create a **public** repo `hryby-shulhivky`, set the GitHub username 
 > Include a README with the owner workflow (Google Photos originals → script → git push) and the warnings above. Use two placeholder sample entries clearly marked as examples. Visual style: one serif family, moss green on pale lichen grey, square edge-to-edge photos without shadows, no decorative motion.
 
 ---
+
 *Generated from the design interview for the "Mashroom world" project.*
