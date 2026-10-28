@@ -9,7 +9,7 @@ const items = (await getCollection('mushrooms')).sort((a, b) => a.data.name.loca
   <div class="tools"><input id="q" type="search" placeholder="Пошук гриба…" aria-label="Пошук гриба">
     <div class="chips"><button class="chip" data-f="" aria-pressed="true">Усі</button>
       {Object.entries(EDIBILITY).map(([k, v]) => <button class="chip" data-f={k} aria-pressed="false">{v.icon} {v.label.split(' / ')[0]}</button>)}</div></div>
-  <div class="grid">{items.map(m => { const e = EDIBILITY[m.data.edibility]; const p = photos(m.id)[0]; return (
+  <div class="grid">{items.map(m => { const e = EDIBILITY[m.data.edibility]; const p = photos(m.id, m.data.cover)[0]; return (
     <a class="card" href={`${base}/mushrooms/${m.id}/`} data-t={`${m.data.name} ${m.data.latin}`.toLowerCase()} data-e={m.data.edibility}>
       {p ? <img src={p} alt={m.data.name} loading="lazy" /> : <div class="ph">🍄</div>}
       <span class="tag" style={`background:${e.color}`}>{e.icon} {e.label.split(' / ')[0]}</span>

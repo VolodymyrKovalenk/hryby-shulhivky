@@ -5,7 +5,9 @@ if (!slug || !dir) { console.log('Usage: npm run photos -- <slug> <folder> [--pr
 const out = `public/photos/${slug}`; fs.mkdirSync(out, { recursive: true });
 const locFile = flag === '--private' ? 'data/private-locations.json' : 'src/data/locations.json';
 const locs = fs.existsSync(locFile) ? JSON.parse(fs.readFileSync(locFile, 'utf8')) : {};
-let n = fs.readdirSync(out).length;
+const sourcesPath = path.join(out, 'sources.json');
+const sources = fs.existsSync(sourcesPath) ? JSON.parse(fs.readFileSync(sourcesPath, 'utf8')) : {};
+let n = fs.readdirSync(out).filter(f => /^\d+\.webp$/i.test(f)).length;
 for (const f of fs.readdirSync(dir).filter(f => /\.(jpe?g|png|webp)$/i.test(f)).sort()) {
   const src = path.join(dir, f);
   const gps = await exifr.gps(src).catch(() => null);
@@ -13,8 +15,11 @@ for (const f of fs.readdirSync(dir).filter(f => /\.(jpe?g|png|webp)$/i.test(f)).
   const name = String(++n).padStart(2, '0') + '.webp';
   // sharp drops all metadata by default: committed photos carry no EXIF.
   await sharp(src).rotate().resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true }).webp({ quality: 80 }).toFile(path.join(out, name));
+  sources[name] = f;
   if (gps?.latitude) (locs[slug] ??= []).push({ lat: +gps.latitude.toFixed(5), lng: +gps.longitude.toFixed(5), date: meta?.DateTimeOriginal?.toISOString().slice(0, 10) });
-  console.log(name, gps?.latitude ? 'GPS ✓' : 'no GPS');
+  console.log(name, '←', f, gps?.latitude ? 'GPS ✓' : 'no GPS');
 }
+fs.writeFileSync(sourcesPath, JSON.stringify(sources, null, 2) + '\n');
 fs.mkdirSync(path.dirname(locFile), { recursive: true }); fs.writeFileSync(locFile, JSON.stringify(locs, null, 2));
 console.log(`Saved coordinates to ${locFile}`);
+console.log(`Saved source map to ${sourcesPath}`);

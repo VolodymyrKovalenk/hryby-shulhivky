@@ -5,7 +5,7 @@ import Map from '../../components/Map.astro';
 import { EDIBILITY, photos, locations, base } from '../../lib';
 export async function getStaticPaths() { return (await getCollection('mushrooms')).map(m => ({ params: { slug: m.id }, props: { m } })); }
 const { m } = Astro.props; const d = m.data; const e = EDIBILITY[d.edibility]; const { Content } = await render(m);
-const imgs = photos(m.id);
+const imgs = photos(m.id, d.cover);
 ---
 <Base title={`${d.name} — Гриби Шульгівки`}>
   <a class="back" href={`${base}/`}>← Усі гриби</a>
@@ -17,11 +17,12 @@ const imgs = photos(m.id);
   <div class="facts"><div class="fact"><small>Сезон</small><p>{d.season}</p></div><div class="fact"><small>Місце</small><p>{d.habitat}</p></div><div class="fact"><small>Схожі гриби</small><p>{d.lookalikes}</p></div></div>
   {d.source && <p class="src">Джерело: {d.source}</p>}
   <Map points={locations(m.id)} />
-  {imgs.length > 0 && <dialog class="lightbox"><button type="button" class="lightbox-close" aria-label="Закрити">×</button><img alt="" /></dialog>}
+  {imgs.length > 0 && <dialog class="lightbox" aria-label="Перегляд фото"><button type="button" class="lightbox-close" aria-label="Закрити">×</button><img alt="" tabindex="-1" /></dialog>}
 </Base>
 {imgs.length > 0 && <script>
   const dialog = document.querySelector('.lightbox') as HTMLDialogElement;
   const full = dialog.querySelector('img')!;
+  const closeBtn = dialog.querySelector('.lightbox-close') as HTMLButtonElement;
   const thumbs = [...document.querySelectorAll<HTMLImageElement>('.gallery button img')];
   let i = 0;
   const show = (n: number) => {
@@ -29,17 +30,22 @@ const imgs = photos(m.id);
     full.src = thumbs[i].src;
     full.alt = thumbs[i].alt;
   };
+  const onKey = (e: KeyboardEvent) => {
+    if (!dialog.open) return;
+    if (e.key === 'ArrowRight' && thumbs.length > 1) { e.preventDefault(); show(i + 1); }
+    else if (e.key === 'ArrowLeft' && thumbs.length > 1) { e.preventDefault(); show(i - 1); }
+    else if (e.key === 'Escape') { e.preventDefault(); dialog.close(); }
+  };
   document.querySelectorAll<HTMLButtonElement>('.gallery button').forEach((button, n) => {
     button.addEventListener('click', () => {
       show(n);
       dialog.showModal();
+      full.focus({ preventScroll: true });
     });
   });
-  document.addEventListener('keydown', (e) => {
-    if (!dialog.open || thumbs.length < 2) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
-  });
-  dialog.addEventListener('click', () => dialog.close());
+  // Capture on window so arrows work even when focus is inside <dialog>
+  window.addEventListener('keydown', onKey, true);
+  closeBtn.addEventListener('click', (e) => { e.stopPropagation(); dialog.close(); });
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
   dialog.addEventListener('close', () => full.removeAttribute('src'));
 </script>}
