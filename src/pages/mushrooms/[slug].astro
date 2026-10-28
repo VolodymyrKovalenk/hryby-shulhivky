@@ -22,13 +22,23 @@ const imgs = photos(m.id);
 {imgs.length > 0 && <script>
   const dialog = document.querySelector('.lightbox') as HTMLDialogElement;
   const full = dialog.querySelector('img')!;
-  document.querySelectorAll<HTMLButtonElement>('.gallery button').forEach(button => {
+  const thumbs = [...document.querySelectorAll<HTMLImageElement>('.gallery button img')];
+  let i = 0;
+  const show = (n: number) => {
+    i = (n + thumbs.length) % thumbs.length;
+    full.src = thumbs[i].src;
+    full.alt = thumbs[i].alt;
+  };
+  document.querySelectorAll<HTMLButtonElement>('.gallery button').forEach((button, n) => {
     button.addEventListener('click', () => {
-      const thumb = button.querySelector('img')!;
-      full.src = thumb.src;
-      full.alt = thumb.alt;
+      show(n);
       dialog.showModal();
     });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!dialog.open || thumbs.length < 2) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
   });
   dialog.addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => full.removeAttribute('src'));

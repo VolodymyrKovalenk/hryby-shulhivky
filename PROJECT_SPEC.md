@@ -151,7 +151,7 @@ Markdown body = "Як розпізнати" (how to recognise it).
 
 **Photos** — discovered at build time by listing `public/photos/<slug>/`. No photo list is stored in the entry.
 
-## 7. Features and behaviour
+## 7. Features and behavior
 
 - **Home:** banner, search (matches Ukrainian name + Latin name), edibility dropdown, photo grid. A placeholder 🍄 is shown when an entry has no photo.
 - **Entry page:** name + Latin name, edibility tag, look-alike warning for edible entries, photo gallery, "how to recognise", facts list (season, habitat, look-alikes, source), map + coordinate list if coordinates exist.
