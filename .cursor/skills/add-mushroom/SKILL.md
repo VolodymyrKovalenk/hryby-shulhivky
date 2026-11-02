@@ -90,12 +90,13 @@ Also skip any source that starts with `ПРИКЛАД`.
 
 ### 7. Photos import
 
-`npm run photos` reads **only top-level** image files in one directory (not recursive).
+`npm run photos` reads **only top-level** image files in one directory (not recursive). It **skips** originals already listed in `public/photos/<slug>/sources.json` (no duplicate webps, no re-reading their GPS).
 
 1. After step 1, photos should already be loose files in `photo-src/<name>/` (or a temp folder of **new** files only when appending).
 2. Run: `npm run photos -- <slug> "<PHOTOS_FOLDER>"` (add `--private` only if `PRIVATE_LOCATIONS` is `yes`). The script **appends** and never overwrites existing `public/photos/<slug>/` files.
 3. Do not delete or rename existing site photos.
-4. Never edit `locations.json` or `private-locations.json` by hand.
+4. Never edit `locations.json` or `private-locations.json` by hand — except when the user asks to **clear** wrong map points. Do **not** recreate cleared coordinates from already-imported home photos. GPS is written only for **newly** imported files that still have EXIF GPS.
+5. If map points were removed because photos were taken at home, leave `locations.json` empty for that slug; do not re-run import solely to restore GPS.
 
 ## Verify (once at the end of the run)
 
