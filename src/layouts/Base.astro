@@ -41,7 +41,7 @@ const { title = 'Гриби Шульгівки' } = Astro.props;
   .hero h1 { margin:0; font-size:clamp(2rem,6vw,3.2rem); line-height:1.1 } .hero p { margin:.5rem 0 0; opacity:.85; max-width:34rem }
   .tools { display:grid; gap:.8rem; margin-bottom:1.5rem }
   .tools input { width:100%; font:inherit; padding:.8rem 1.1rem; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:99px }
-  .tools input:focus,.chip:focus-visible,a:focus-visible,.gallery button:focus-visible,.lightbox-close:focus-visible { outline:3px solid var(--accent); outline-offset:2px }
+  .tools input:focus,.chip:focus-visible,a:focus-visible,.lightbox-close:focus-visible { outline:3px solid var(--accent); outline-offset:2px }
   .chips { display:flex; gap:.5rem; overflow-x:auto; padding-bottom:.2rem; scrollbar-width:none }
   .chip { font:600 .9rem var(--sans); white-space:nowrap; padding:.45rem 1rem; border-radius:99px; border:1px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer }
   .chip[aria-pressed=true] { background:var(--brand); border-color:var(--brand); color:#fff }
@@ -54,8 +54,10 @@ const { title = 'Гриби Шульгівки' } = Astro.props;
   .card .tag { position:absolute; top:.7rem; left:.7rem; box-shadow:0 2px 8px rgba(0,0,0,.3) }
   .back { display:inline-block; margin:1rem 0 .5rem; color:var(--muted); text-decoration:none; font-weight:600 } .back:hover { color:var(--ink) }
   .gallery { display:flex; gap:.7rem; overflow-x:auto; scroll-snap-type:x mandatory; margin:0 -1rem; padding:0 1rem }
-  .gallery button { padding:0; border:0; background:none; cursor:zoom-in; scroll-snap-align:start; border-radius:var(--r); line-height:0 }
-  .gallery img { height:min(55vh,420px); max-width:88vw; border-radius:var(--r); object-fit:cover }
+  .gallery button { position:relative; padding:0; border:0; background:none; cursor:zoom-in; scroll-snap-align:start; border-radius:var(--r); line-height:0 }
+  /* Inner ring: outer outline/offset is clipped by .gallery { overflow-x:auto } */
+  .gallery button:focus-visible { outline:3px solid var(--accent); outline-offset:-5px }
+  .gallery img { height:min(55vh,420px); max-width:88vw; border-radius:var(--r); object-fit:cover; display:block }
   .lightbox { padding:0; border:0; background:transparent }
   .lightbox[open] { position:fixed; inset:0; width:100vw; height:100dvh; max-width:none; max-height:none; margin:0; padding:1rem; display:flex; align-items:center; justify-content:center; cursor:zoom-out }
   .lightbox::backdrop { background:rgba(8,14,11,.88) }
